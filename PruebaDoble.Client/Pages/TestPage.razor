@@ -1,0 +1,38 @@
+@page "/test"
+@inject HttpClient Http
+
+<h3>Página de Prueba</h3>
+
+@if (error != null)
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+@if (data != null)
+{
+    <div class="alert alert-success">
+        @data
+    </div>
+}
+
+<button class="btn btn-primary" @onclick="TestApi">Probar API</button>
+
+@code {
+    private string error;
+    private string data;
+
+    private async Task TestApi()
+    {
+        try
+        {
+            var response = await Http.GetStringAsync("api/test/simple");
+            data = response;
+            error = null;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            Console.WriteLine($"Error completo: {ex}");
+        }
+    }
+} 

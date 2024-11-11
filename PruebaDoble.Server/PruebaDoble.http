@@ -1,0 +1,6 @@
+@PruebaDoble_HostAddress = http://localhost:5000
+
+GET {{PruebaDoble_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

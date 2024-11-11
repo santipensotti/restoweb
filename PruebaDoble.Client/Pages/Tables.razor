@@ -1,0 +1,157 @@
+@page "/table/{tableId}"
+@inject HttpClient Http
+@using System.Text.Json
+@using BlazorAppWithServer.Shared.Models
+
+<PageTitle>Mesa @tableId</PageTitle>
+
+<div class="container mt-4">
+    <h1>Mesa @tableId</h1>
+    
+    @if (error != null)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    @if (menuItems != null)
+    {
+        <div class="row">
+            @foreach (var item in menuItems)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Item1</h5>
+                            <p class="card-text">$@item.Item2</p>
+                            <div class="d-flex">
+                                <button class="btn btn-secondary me-2" @onclick="() => DecreaseQuantity(item.Item1)">-</button>
+                                <span>@GetQuantity(item.Item1)</span>
+                                <button class="btn btn-secondary ms-2" @onclick="() => IncreaseQuantity(item.Item1)">+</button>
+                            </div>
+                            <button class="btn btn-primary mt-2" @onclick="() => AddToOrder(item.Item1)">
+                                Ordenar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (orders?.Any() == true)
+    {
+        <div class="mt-4">
+            <h3>Pedidos Actuales</h3>
+            <ul class="list-group">
+                @foreach (var order in orders)
+                {
+                    <li class="list-group-item">
+                        @order.Key: @order.Value
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string tableId { get; set; }
+
+    private List<Tuple<string, int>> menuItems;
+    private Dictionary<string, int> orders = new Dictionary<string, int>();
+    private Dictionary<string, int> quantities = new Dictionary<string, int>();
+    private string error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            // Cargar menú del restaurante (usando restaurante 0 por defecto)
+            menuItems = await Http.GetFromJsonAsync<List<Tuple<string, int>>>("api/order/menu/0");
+            
+            // Cargar órdenes de la mesa
+            var orderList = await Http.GetFromJsonAsync<List<string>>($"api/order/messages/{tableId}");
+            orders = orderList
+                .GroupBy(o => o)
+                .ToDictionary(g => g.Key, g => g.Count());
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al cargar datos: {ex.Message}";
+            Console.WriteLine($"Error detallado: {ex}");
+        }
+    }
+
+    private void IncreaseQuantity(string itemName)
+    {
+        if (quantities.ContainsKey(itemName))
+        {
+            quantities[itemName]++;
+        }
+        else
+        {
+            quantities[itemName] = 1;
+        }
+    }
+
+    private void DecreaseQuantity(string itemName)
+    {
+        if (quantities.ContainsKey(itemName) && quantities[itemName] > 0)
+        {
+            quantities[itemName]--;
+            if (quantities[itemName] == 0)
+            {
+                quantities.Remove(itemName);
+            }
+        }
+    }
+
+    private int GetQuantity(string itemName)
+    {
+        return quantities.ContainsKey(itemName) ? quantities[itemName] : 0;
+    }
+
+    private async Task AddToOrder(string itemName)
+    {
+        try
+        {
+            if (!quantities.ContainsKey(itemName) || quantities[itemName] == 0)
+            {
+                error = "La cantidad debe ser mayor a 0";
+                return;
+            }
+
+            int quantity = quantities[itemName];
+            for (int i = 0; i < quantity; i++)
+            {
+                var request = new OrderRequest 
+                { 
+                    TableId = int.Parse(tableId), 
+                    Order = itemName 
+                };
+
+                var response = await Http.PostAsJsonAsync("api/order/send", request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    error = $"Error al enviar el pedido: {errorContent}";
+                    return;
+                }
+            }
+
+            // Actualizar el estado después de enviar el pedido
+            await LoadData();
+            quantities[itemName] = 0; // Reiniciar la cantidad después de agregar
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al agregar pedido: {ex.Message}";
+        }
+    }
+}

@@ -1,0 +1,177 @@
+@page "/Resto/{restoId}"
+@inject HttpClient Http
+@using BlazorAppWithServer.Shared.Models
+
+<h3>Menú del Restaurante @restoId</h3>
+
+@if (error != null)
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+@if (menuItems?.Any() == true)
+{
+    <ul class="list-group">
+        @foreach (var item in menuItems)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@item.Item1</span>
+                <span class="badge bg-primary rounded-pill">
+                    @item.Item2.ToString("C0", new System.Globalization.CultureInfo("es-AR"))
+                </span>
+                <button class="btn btn-danger btn-sm ms-2" @onclick="@(() => EliminarItem(item))">Eliminar</button>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No hay ítems disponibles en el menú.</p>
+}
+
+<hr />
+
+<div class="row g-3 align-items-center mb-3">
+    <div class="col-auto">
+        <input type="text" class="form-control" placeholder="Nombre" @bind="name" required />
+    </div>
+    <div class="col-auto">
+        <input type="number" class="form-control" placeholder="Precio" @bind="price" required />
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary" @onclick="AgregarItem">Agregar</button>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <h3>Cantidad de Mesas</h3>
+
+    <div class="d-flex align-items-center">
+        <button class="btn btn-danger me-3"
+                @onclick="DecrementarMesa"
+                disabled="@(tableCount <= 1)">
+            -
+        </button>
+
+        <span>@tableCount</span>
+
+        <button class="btn btn-success ms-3" @onclick="IncrementarMesa">+</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string restoId { get; set; }
+
+    private List<Tuple<string, int>> menuItems;
+    private string? name;
+    private int? price;
+    private int tableCount;
+    private string error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            var restaurantId = int.Parse(restoId);
+            menuItems = await Http.GetFromJsonAsync<List<Tuple<string, int>>>($"api/order/menu/{restaurantId}");
+            var response = await Http.GetAsync($"api/restaurant/tables/{restaurantId}");
+            if (response.IsSuccessStatusCode)
+            {
+                tableCount = await response.Content.ReadFromJsonAsync<int>();
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al cargar datos: {ex.Message}";
+        }
+    }
+
+    private async Task AgregarItem()
+    {
+        if (!string.IsNullOrWhiteSpace(name) && price.HasValue)
+        {
+            try
+            {
+                var response = await Http.PostAsJsonAsync($"api/restaurant/menuitem", new 
+                { 
+                    RestaurantId = int.Parse(restoId),
+                    Name = name,
+                    Price = price.Value
+                });
+
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadData();
+                    name = "";
+                    price = 0;
+                }
+                else
+                {
+                    error = "Error al agregar el ítem";
+                }
+            }
+            catch (Exception ex)
+            {
+                error = $"Error: {ex.Message}";
+            }
+        }
+    }
+
+    private async Task EliminarItem(Tuple<string, int> item)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync($"api/restaurant/menuitem/{restoId}/{item.Item1}");
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadData();
+            }
+            else
+            {
+                error = "Error al eliminar el ítem";
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"Error: {ex.Message}";
+        }
+    }
+
+    private async Task IncrementarMesa()
+    {
+        try
+        {
+            var response = await Http.PostAsync($"api/restaurant/{restoId}/addtable", null);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadData();
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"Error: {ex.Message}";
+        }
+    }
+
+    private async Task DecrementarMesa()
+    {
+        try
+        {
+            var response = await Http.PostAsync($"api/restaurant/{restoId}/removetable", null);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadData();
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"Error: {ex.Message}";
+        }
+    }
+} 
