@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\PruebaDoble.Client.props" />
+</Project>

@@ -1,0 +1,61 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\obj\\Debug\\net8.0\\compressed\\d0dvdz0zbb.gz",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js.gz"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\obj\\Debug\\net8.0\\scopedcss\\bundle\\PruebaDoble.Client.styles.css",
+      "PackagePath": "staticwebassets\\PruebaDoble.Client.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\wwwroot\\icon-192.png",
+      "PackagePath": "staticwebassets\\icon-192.png"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\wwwroot\\sample-data\\weather.json",
+      "PackagePath": "staticwebassets\\sample-data\\weather.json"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.PruebaDoble.Client.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.PruebaDoble.Client.props",
+      "PackagePath": "build\\PruebaDoble.Client.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.PruebaDoble.Client.props",
+      "PackagePath": "buildMultiTargeting\\PruebaDoble.Client.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.PruebaDoble.Client.props",
+      "PackagePath": "buildTransitive\\PruebaDoble.Client.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

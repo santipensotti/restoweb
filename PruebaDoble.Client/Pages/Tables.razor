@@ -73,7 +73,7 @@
         try
         {
             // Cargar menú del restaurante (usando restaurante 0 por defecto)
-            menuItems = await Http.GetFromJsonAsync<List<Tuple<string, int>>>("api/order/menu/0");
+            menuItems = await Http.GetFromJsonAsync<List<Tuple<string, int>>>("api/order/menu");
             
             // Cargar órdenes de la mesa
             var orderList = await Http.GetFromJsonAsync<List<string>>($"api/order/messages/{tableId}");

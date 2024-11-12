@@ -1,0 +1,111 @@
+@page "/qr/{restaurantId:int}/{mesas:int}"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h1>Generador de códigos QR para restaurante @RestaurantId</h1>
+
+<div class="container mt-4">
+    @if (qrCodes != null && qrCodes.Any())
+    {
+        <div class="text-center">
+            @for (int i = 0; i < qrCodes.Count; i += 3)
+            {
+                <div class="row mb-4">
+                    @for (int j = i; j < i + 3 && j < qrCodes.Count; j++)
+                    {
+                        <div class="col-md-4">
+                            <div class="qr-container">
+                                @if (!string.IsNullOrEmpty(qrCodes[j].ImageUrl))
+                                {
+                                    <img src="@qrCodes[j].ImageUrl" 
+                                         alt="QR Code para Mesa @qrCodes[j].MesaId" 
+                                         style="max-width: 200px; width: 100%;" />
+                                }
+                                else
+                                {
+                                    <div>Error al cargar QR</div>
+                                }
+                                <p class="mt-2 mb-1">Mesa @qrCodes[j].MesaId</p>
+                                <small class="text-muted">
+                                    <a href="@qrCodes[j].Url" target="_blank">Probar código</a>
+                                </small>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div>Cargando códigos QR...</div>
+    }
+</div>
+
+<style>
+    .qr-container {
+        padding: 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int Mesas { get; set; }
+    
+    [Parameter]
+    public int RestaurantId { get; set; }
+
+    private List<QRCodeData> qrCodes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
+        
+        for (int mesaId = 1; mesaId <= Mesas; mesaId++)
+        {
+            try
+            {
+                using var response = await Http.GetAsync($"api/qr/generate/{RestaurantId}/{mesaId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var imageBytes = await response.Content.ReadAsByteArrayAsync();
+                    var base64Image = Convert.ToBase64String(imageBytes);
+                    var imageUrl = $"data:image/png;base64,{base64Image}";
+                    var url = $"{baseUrl}/mesa/{RestaurantId}/{mesaId}";
+                    
+                    Console.WriteLine($"Generated QR for Mesa {mesaId}"); // Debug
+                    Console.WriteLine($"Image URL length: {imageUrl.Length}"); // Debug
+                    
+                    qrCodes.Add(new QRCodeData
+                    {
+                        MesaId = mesaId,
+                        Url = url,
+                        ImageUrl = imageUrl
+                    });
+                }
+                else
+                {
+                    Console.WriteLine($"Error generating QR for Mesa {mesaId}: {response.StatusCode}"); // Debug
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception generating QR for Mesa {mesaId}: {ex.Message}"); // Debug
+            }
+        }
+        
+        StateHasChanged(); // Forzar actualización de la UI
+    }
+
+    private class QRCodeData
+    {
+        public int MesaId { get; set; }
+        public string Url { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+    }
+}
