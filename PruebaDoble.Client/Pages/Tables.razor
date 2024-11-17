@@ -1,4 +1,4 @@
-@page "/table/{tableId}"
+@page "/table/{restoId}/{tableId}"
 @inject HttpClient Http
 @using System.Text.Json
 @using BlazorAppWithServer.Shared.Models
@@ -56,6 +56,9 @@
 
 @code {
     [Parameter]
+    public string restoId { get; set; }
+
+    [Parameter]
     public string tableId { get; set; }
 
     private List<MenuItem> menuItems = new List<MenuItem>();
@@ -73,7 +76,7 @@
         try
         {
             // Cargar menú del restaurante (usando restaurante 0 por defecto)
-            menuItems = await Http.GetFromJsonAsync<List<MenuItem>>("api/order/menu/1");
+            menuItems = await Http.GetFromJsonAsync<List<MenuItem>>($"api/order/menu/{restoId}");
             
             // Cargar órdenes de la mesa
             var orderList = await Http.GetFromJsonAsync<List<string>>($"api/order/messages/{tableId}");
