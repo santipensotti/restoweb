@@ -141,8 +141,8 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-        [HttpGet("menu/{restaurantId}")]
-        public ActionResult<List<Tuple<string, int>>> GetRestaurantMenu(int restaurantId)
+      [HttpGet("menu/{restaurantId}")]
+        public ActionResult<List<MenuItem>> GetRestaurantMenu(int restaurantId)
         {
             if (restaurantId < 0)
                 return BadRequest(new { message = "Invalid restaurant ID" });
@@ -157,7 +157,7 @@ namespace BlazorAppWithServer.Server.Controllers
                     RestaurantRepository.AddItemToMenu(restaurantId, 80, "Ensalada");
                     menu = RestaurantRepository.getMenuOfARestaurant(restaurantId);
                 }
-                return Ok(menu);
+                return Ok(menu.Select(item => new MenuItem { Name = item.Item1, Price = item.Item2 }).ToList());
             }
             catch (Exception ex)
             {

@@ -3,16 +3,28 @@ using PruebaDoble.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Agregar servicios al contenedor.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Register services
+// Configurar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5121") // URL de tu aplicación Blazor
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+// Registrar servicios adicionales
 builder.Services.AddScoped<QRCodeService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar el pipeline de solicitudes HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -27,6 +39,9 @@ app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 app.UseRouting();
+
+// **Importante:** Usar CORS antes de MapControllers
+app.UseCors("AllowBlazorApp");
 
 app.MapRazorPages();
 app.MapControllers();

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {}
+    "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {}
   },
   "projects": {
-    "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {
+    "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
         "projectName": "PruebaDoble.Shared",
-        "projectPath": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
+        "projectPath": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
         "packagesPath": "C:\\Users\\penso\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\obj\\",
+        "outputPath": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\penso\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "rXqZEbVqiG4=",
+  "dgSpecHash": "7WkcFMI/G2o=",
   "success": true,
-  "projectFilePath": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
+  "projectFilePath": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\penso\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
     "C:\\Users\\penso\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512"

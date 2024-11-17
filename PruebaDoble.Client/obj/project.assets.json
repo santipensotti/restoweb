@@ -2094,11 +2094,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Client\\PruebaDoble.Client.csproj",
+      "projectUniqueName": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\PruebaDoble.Client.csproj",
       "projectName": "PruebaDoble.Client",
-      "projectPath": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Client\\PruebaDoble.Client.csproj",
+      "projectPath": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\PruebaDoble.Client.csproj",
       "packagesPath": "C:\\Users\\penso\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Client\\obj\\",
+      "outputPath": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\penso\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2116,8 +2116,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {
-              "projectPath": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj"
+            "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {
+              "projectPath": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj"
             }
           }
         }

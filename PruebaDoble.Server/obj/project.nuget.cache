@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7Z4QOFWAvx8=",
+  "dgSpecHash": "d4NERAeaV8g=",
   "success": true,
-  "projectFilePath": "C:\\Users\\penso\\Desktop\\PruebaDoble\\PruebaDoble.Server\\PruebaDoble.Server.csproj",
+  "projectFilePath": "C:\\Users\\penso\\Desktop\\restoweb\\PruebaDoble.Server\\PruebaDoble.Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\penso\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.10\\microsoft.aspnetcore.authorization.8.0.10.nupkg.sha512",
     "C:\\Users\\penso\\.nuget\\packages\\microsoft.aspnetcore.components\\8.0.10\\microsoft.aspnetcore.components.8.0.10.nupkg.sha512",
