@@ -13,9 +13,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowBlazorApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5121") // URL de tu aplicación Blazor
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy.WithOrigins(
+                "http://localhost:5121",             // URL para desarrollo local
+                "https://tu-app.herokuapp.com"       // URL de producción en Heroku
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
         });
 });
 
@@ -34,6 +37,10 @@ else
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+
+// Configuración del puerto dinámico para Heroku
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+app.Urls.Add($"http://*:{port}");
 
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
