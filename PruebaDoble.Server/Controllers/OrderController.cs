@@ -11,112 +11,47 @@ namespace BlazorAppWithServer.Server.Controllers
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
+        // Endpoint para recibir un nuevo pedido y agregarlo a la mesa
         [HttpPost("send")]
         public IActionResult SendMessage([FromBody] OrderRequest request)
         {
-            if (request == null || string.IsNullOrWhiteSpace(request.Order))
-                return BadRequest(new { message = "Request or order cannot be empty" });
+            if (request == null || request.MenuItem == null)
+                return BadRequest(new { message = "Request or menu item cannot be empty" });
 
             try
             {
-                OrdersRepository.AddOrderForTable(request.TableId, request.Order);
-                MessagesRepository.AddMessage($"Mesa {request.TableId}: {request.Order}");
-                return Ok(new { message = "Order sent successfully" });
+                // Crear la nueva orden con los detalles proporcionados
+                var order = new Order
+                {
+                    OrderId = new Random().Next(1, 10000), // Generar un ID de orden aleatorio, se puede mejorar
+                    MenuItem = request.MenuItem,
+                    State = OrderState.Pending
+                };
+
+                // Agregar la orden a la mesa correspondiente
+                OrdersRepository.AddOrderForTable(request.RestoId, request.TableId, order);
+
+                // Enviar un mensaje (opcional)
+                MessagesRepository.AddMessage($"Mesa {request.TableId}: {request.MenuItem.Name}");
+
+                return Ok(new { message = "Order sent successfully", orderId = order.OrderId });
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = $"Error al procesar el pedido: {ex.Message}" });
             }
         }
-        /*
-        [HttpPost("createRestaurant")]
-        public IActionResult CreateRestaurant(int countTables)
-        {
-            if (countTables <= 0)
-                return BadRequest(new { message = "Table count must be greater than 0" });
 
-            RestaurantRepository.AddRestaurant(countTables);
-            return Ok(new { message = "Restaurant created successfully" });
-        }
-        */
-        [HttpPost("restaurant/menuitem")]
-        public IActionResult AddMenuItem([FromBody] MenuItemRequest request)
-        {
-            if (request.Price <= 0 || string.IsNullOrWhiteSpace(request.Name))
-                return BadRequest(new { message = "Invalid price or item name" });
-
-            try
-            {
-                RestaurantRepository.AddItemToMenu(request.RestaurantId, request.Price, request.Name);
-                return Ok(new { message = "Menu item added successfully" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [HttpDelete("restaurant/menuitem/{restaurantId}/{itemName}")]
-        public IActionResult DeleteMenuItem(int restaurantId, string itemName)
-        {
-            try
-            {
-                var menu = RestaurantRepository.getMenuOfARestaurant(restaurantId);
-                var item = menu.FirstOrDefault(i => i.Item1 == itemName);
-                if (item != null)
-                {
-                    RestaurantRepository.DeleteItemFromMenu(restaurantId, item.Item2, itemName);
-                    return Ok(new { message = "Menu item deleted successfully" });
-                }
-                return NotFound(new { message = "Item not found" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [HttpPost("restaurant/{restaurantId}/addtable")]
-        public IActionResult AddTable(int restaurantId)
-        {
-            if (restaurantId < 0)
-                return BadRequest(new { message = "Invalid restaurant ID" });
-
-            try
-            {
-                RestaurantRepository.addTable(restaurantId);
-                return Ok(new { message = "Table added successfully" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [HttpPost("restaurant/{restaurantId}/removetable")]
-        public IActionResult RemoveTable(int restaurantId)
-        {
-            if (restaurantId < 0)
-                return BadRequest(new { message = "Invalid restaurant ID" });
-
-            try
-            {
-                RestaurantRepository.substractTable(restaurantId);
-                return Ok(new { message = "Table removed successfully" });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
+        // Endpoint para marcar un pedido como entregado
         [HttpPost("deliver")]
         public IActionResult DeliverOrder([FromBody] OrderDeliveryRequest request)
         {
             try
             {
-                OrdersRepository.DeliverOrder(request.TableId, request.Order);
-                return Ok(new { message = $"Pedido {request.Order} entregado a la mesa {request.TableId}" });
+                // Buscar la orden y actualizar su estado
+                OrdersRepository.UpdateOrderState(request.RestoId, request.TableId, request.OrderId, OrderState.Delivered);
+                
+                return Ok(new { message = $"Pedido {request.OrderId} entregado a la mesa {request.TableId}" });
             }
             catch (Exception ex)
             {
@@ -124,15 +59,17 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-        [HttpGet("messages/{tableId}")]
-        public ActionResult<List<string>> GetTableOrders(int tableId)
+        // Endpoint para obtener los pedidos de una mesa
+        [HttpGet("tableOrders/{restoId}/{tableId}")]
+        public ActionResult<List<Order>> GetTableOrders(int restoId, int tableId)
         {
             if (tableId < 0)
                 return BadRequest(new { message = "Invalid table ID" });
 
             try
             {
-                var orders = OrdersRepository.GetTableOrders(tableId) ?? new List<string>();
+                // Obtener las órdenes de la mesa
+                var orders = OrdersRepository.GetTableOrders(restoId, tableId) ?? new List<Order>();
                 return Ok(orders);
             }
             catch (Exception ex)
@@ -141,7 +78,34 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-      [HttpGet("menu/{restaurantId}")]
+        // Endpoint para obtener todos los pedidos de un restaurante
+        [HttpGet("tableOrders/{restoId}")]
+        public ActionResult<Dictionary<int, List<Order>>> GetOrdersByRestaurantId(int restoId)
+        {
+            if (restoId < 0)
+                return BadRequest(new { message = "Invalid resto ID" });
+
+            try
+            {
+                // Obtener las órdenes del restaurante
+                var orders = OrdersRepository.GetOrdersByRestaurantId(restoId);
+
+                // Si no hay órdenes, devolver un diccionario vacío
+                if (orders == null || orders.Count == 0)
+                {
+                    return Ok(new Dictionary<int, List<Order>>());
+                }
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error fetching table orders: {ex.Message}" });
+            }
+        }
+
+        // Endpoint para obtener el menú de un restaurante
+        [HttpGet("menu/{restaurantId}")]
         public ActionResult<List<MenuItem>> GetRestaurantMenu(int restaurantId)
         {
             if (restaurantId < 0)
@@ -152,6 +116,7 @@ namespace BlazorAppWithServer.Server.Controllers
                 var menu = RestaurantRepository.getMenuOfARestaurant(restaurantId);
                 if (menu == null || !menu.Any())
                 {
+                    // Si el menú está vacío, agregar algunos ítems predeterminados
                     RestaurantRepository.AddItemToMenu(restaurantId, 100, "Pizza");
                     RestaurantRepository.AddItemToMenu(restaurantId, 150, "Hamburguesa");
                     RestaurantRepository.AddItemToMenu(restaurantId, 80, "Ensalada");
@@ -165,28 +130,45 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-        [HttpGet("restaurant/tables/{restaurantId}")]
-        public ActionResult<int> GetTableCount(int restaurantId)
-        {
-            if (restaurantId < 0)
-                return BadRequest(new { message = "Invalid restaurant ID" });
 
+        // Endpoint para actualizar el estado de una orden
+        [HttpPost("updateState")]
+        public IActionResult UpdateOrderState([FromBody] OrderDeliveryRequest request)
+        {
             try
             {
-                int tableCount = RestaurantRepository.getCountTableFromRestaurant(restaurantId);
-                return Ok(tableCount);
+                // Actualizar el estado de la orden
+                OrdersRepository.UpdateOrderState(request.RestoId, request.TableId, request.OrderId, request.NewState);
+
+                return Ok(new { message = $"Estado de la orden {request.OrderId} actualizado a {request.NewState} en la mesa {request.TableId}" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = $"Error fetching table count: {ex.Message}" });
+                return BadRequest(new { message = $"Error al actualizar el estado: {ex.Message}" });
+            }
+        }
+
+
+        [HttpDelete("{restoId}/{tableId}/{orderId}")]
+        public IActionResult DeleteOrder(int restoId, int tableId, int orderId)
+        {
+            try
+            {
+                var success = OrdersRepository.DeliverOrder(restoId, tableId, orderId);
+                if (success)
+                {
+                    return Ok(new { message = "Orden eliminada exitosamente" });
+                }
+                else
+                {
+                    return NotFound(new { message = "Orden no encontrada" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Error al eliminar la orden: {ex.Message}" });
             }
         }
     }
-
-    public class MenuItemRequest
-    {
-        public int RestaurantId { get; set; }
-        public string Name { get; set; }
-        public int Price { get; set; }
-    }
 }
+

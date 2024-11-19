@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<RestaurantService>();
+builder.Services.AddScoped<OrdersService>();
 
 // Configurar CORS
 builder.Services.AddCors(options =>

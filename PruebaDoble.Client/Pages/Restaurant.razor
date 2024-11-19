@@ -15,9 +15,9 @@
         @foreach (var item in menuItems)
         {
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>@item.Item1</span>
+                <span>@item.Name</span>
                 <span class="badge bg-primary rounded-pill">
-                    @item.Item2.ToString("C0", new System.Globalization.CultureInfo("es-AR"))
+                    @item.Price.ToString("C0", new System.Globalization.CultureInfo("es-AR"))
                 </span>
                 <button class="btn btn-danger btn-sm ms-2" @onclick="@(() => EliminarItem(item))">Eliminar</button>
             </li>
@@ -43,35 +43,70 @@ else
     </div>
 </div>
 
-<div class="container mt-4">
-    <h3>Cantidad de Mesas</h3>
+<div class="container mt-4 d-flex flex-column align-items-start ms-3">
+    <h3 class="mb-3">Pedidos por Mesa</h3>
 
-    <div class="d-flex align-items-center">
-        <button class="btn btn-danger me-3"
-                @onclick="DecrementarMesa"
-                disabled="@(tableCount <= 1)">
-            -
-        </button>
-
-        <span>@tableCount</span>
-
-        <button class="btn btn-success ms-3" @onclick="IncrementarMesa">+</button>
-    </div>
+    @if (tableOrders?.Any() == true)
+    {
+        @foreach (var table in tableOrders)
+        {
+            <div class="mb-4 w-100">
+                <h4 class="mb-2">Mesa @table.Key</h4>
+                <ul class="list-unstyled">
+                    @foreach (var order in table.Value)
+                    {
+                        <li class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
+                            <span>@order.MenuItem.Name</span>
+                            <span class="badge bg-secondary">@order.State</span> <!-- Mostrar el estado -->
+                            <div class="d-flex">
+                                <!-- Botón Preparando -->
+                                <button class="btn btn-warning btn-sm ms-2" @onclick="() => ActualizarEstadoOrden(table.Key, order.OrderId, OrderState.Cooking)">
+                                    Preparando
+                                </button>
+                                <!-- Botón Entregado -->
+                                <button class="btn btn-success btn-sm ms-2" @onclick="() => ActualizarEstadoOrden(table.Key, order.OrderId, OrderState.Delivered)">
+                                    Entregado
+                                </button>
+                                <!-- Botón Eliminar -->
+                                <button class="btn btn-secondary btn-sm ms-2" @onclick="() => EliminarOrden(table.Key, order.OrderId)">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No hay órdenes en este momento.</p>
+    }
 </div>
 
 @code {
     [Parameter]
     public string restoId { get; set; }
 
-    private List<Tuple<string, int>> menuItems;
+    private List<MenuItem> menuItems = new List<MenuItem>();
     private string? name;
     private int? price;
     private int tableCount;
     private string error;
 
+
+    private Dictionary<int, List<Order>> tableOrders = new Dictionary<int, List<Order>>(); // Cambiado a Order
+
     protected override async Task OnInitializedAsync()
     {
         await LoadData();
+        await LoadOrdersByRestaurant();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+        await LoadOrdersByRestaurant();
     }
 
     private async Task LoadData()
@@ -79,7 +114,7 @@ else
         try
         {
             var restaurantId = int.Parse(restoId);
-            menuItems = await Http.GetFromJsonAsync<List<Tuple<string, int>>>($"api/order/menu/{restaurantId}");
+            menuItems = await Http.GetFromJsonAsync<List<MenuItem>>($"api/order/menu/{restaurantId}");
             var response = await Http.GetAsync($"api/restaurant/tables/{restaurantId}");
             if (response.IsSuccessStatusCode)
             {
@@ -89,6 +124,22 @@ else
         catch (Exception ex)
         {
             error = $"Error al cargar datos: {ex.Message}";
+        }
+    }
+
+    private async Task LoadOrdersByRestaurant()
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<Dictionary<int, List<Order>>>($"api/order/tableOrders/{restoId}");
+            if (response != null)
+            {
+                tableOrders = response;
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al cargar órdenes: {ex.Message}";
         }
     }
 
@@ -123,11 +174,11 @@ else
         }
     }
 
-    private async Task EliminarItem(Tuple<string, int> item)
+    private async Task EliminarItem(MenuItem item)
     {
         try
         {
-            var response = await Http.DeleteAsync($"api/restaurant/menuitem/{restoId}/{item.Item1}");
+            var response = await Http.DeleteAsync($"api/restaurant/menuitem/{restoId}/{item.Name}");
             if (response.IsSuccessStatusCode)
             {
                 await LoadData();
@@ -143,30 +194,45 @@ else
         }
     }
 
-    private async Task IncrementarMesa()
+   private async Task ActualizarEstadoOrden(int tableId, int orderId, OrderState newState)
+{
+    try
     {
-        try
+        var response = await Http.PostAsJsonAsync("api/order/updateState", new OrderDeliveryRequest
         {
-            var response = await Http.PostAsync($"api/restaurant/{restoId}/addtable", null);
-            if (response.IsSuccessStatusCode)
-            {
-                await LoadData();
-            }
-        }
-        catch (Exception ex)
-        {
-            error = $"Error: {ex.Message}";
-        }
-    }
+            RestoId = int.Parse(restoId),
+            TableId = tableId,
+            OrderId = orderId,
+            NewState = newState
+        });
 
-    private async Task DecrementarMesa()
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadOrdersByRestaurant();
+        }
+        else
+        {
+            error = $"Error al actualizar el estado de la orden: {orderId}";
+        }
+    }
+    catch (Exception ex)
+    {
+        error = $"Error: {ex.Message}";
+    }
+}
+
+    private async Task EliminarOrden(int tableId, int orderId)
     {
         try
         {
-            var response = await Http.PostAsync($"api/restaurant/{restoId}/removetable", null);
+            var response = await Http.DeleteAsync($"api/order/{restoId}/{tableId}/{orderId}");
             if (response.IsSuccessStatusCode)
             {
-                await LoadData();
+                await LoadOrdersByRestaurant();
+            }
+            else
+            {
+                error = $"Error al eliminar la orden: {orderId}";
             }
         }
         catch (Exception ex)
@@ -174,4 +240,4 @@ else
             error = $"Error: {ex.Message}";
         }
     }
-} 
+}

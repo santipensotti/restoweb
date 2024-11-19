@@ -1,7 +1,11 @@
-namespace BlazorAppWithServer.Shared.Models;
-
-public class OrderDeliveryRequest
+namespace BlazorAppWithServer.Shared.Models
 {
-    public int TableId { get; set; }
-    public string Order { get; set; } = string.Empty;
-} 
+    public class OrderDeliveryRequest
+    {
+        public int RestoId { get; set; }
+        public int TableId { get; set; }
+        public int OrderId { get; set; }
+        public OrderState NewState { get; set; }  // Nuevo campo para el estado
+
+    }
+}

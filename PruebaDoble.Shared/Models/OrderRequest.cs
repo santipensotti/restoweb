@@ -1,9 +1,11 @@
-namespace BlazorAppWithServer.Shared.Models;
-
-public class OrderRequest
+namespace BlazorAppWithServer.Shared.Models
 {
-    public int TableId { get; set; }
-    public string Order { get; set; } = string.Empty;
-    public DateTime RequestTime { get; set; } = DateTime.Now;
-    public bool IsDelivered { get; set; } = false;
-} 
+    public class OrderRequest
+    {
+        public int RestoId { get; set; }
+        public int TableId { get; set; }
+        public MenuItem MenuItem { get; set; } = new MenuItem();
+        public DateTime RequestTime { get; set; } = DateTime.Now;
+        public bool IsDelivered { get; set; } = false;
+    }
+}

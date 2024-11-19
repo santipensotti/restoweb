@@ -46,7 +46,7 @@
                 @foreach (var order in orders)
                 {
                     <li class="list-group-item">
-                        @order.Key: @order.Value
+                        Pedido: @order.MenuItem.Name - Estado: @order.State
                     </li>
                 }
             </ul>
@@ -62,7 +62,7 @@
     public string tableId { get; set; }
 
     private List<MenuItem> menuItems = new List<MenuItem>();
-    private Dictionary<string, int> orders = new Dictionary<string, int>();
+    private List<Order> orders = new List<Order>();
     private Dictionary<string, int> quantities = new Dictionary<string, int>();
     private string error;
 
@@ -71,18 +71,22 @@
         await LoadData();
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        // Este método se ejecutará cada vez que los parámetros cambien (cuando cambie la ruta)
+        await LoadData();
+    }
+
     private async Task LoadData()
     {
         try
         {
-            // Cargar menú del restaurante (usando restaurante 0 por defecto)
+            // Cargar menú del restaurante
             menuItems = await Http.GetFromJsonAsync<List<MenuItem>>($"api/order/menu/{restoId}");
             
-            // Cargar órdenes de la mesa
-            var orderList = await Http.GetFromJsonAsync<List<string>>($"api/order/messages/{tableId}");
-            orders = orderList
-                .GroupBy(o => o)
-                .ToDictionary(g => g.Key, g => g.Count());
+            // Cargar órdenes de la mesa, incluyendo el estado de cada una
+            var response = await Http.GetFromJsonAsync<List<Order>>($"api/order/tableOrders/{restoId}/{tableId}");
+            orders = response ?? new List<Order>();
         }
         catch (Exception ex)
         {
@@ -135,8 +139,9 @@
             {
                 var request = new OrderRequest 
                 { 
+                    RestoId = int.Parse(restoId),
                     TableId = int.Parse(tableId), 
-                    Order = itemName 
+                    MenuItem = new MenuItem { Name = itemName, Price = 0 } // Asumiendo que el precio no es necesario para el pedido
                 };
 
                 var response = await Http.PostAsJsonAsync("api/order/send", request);
