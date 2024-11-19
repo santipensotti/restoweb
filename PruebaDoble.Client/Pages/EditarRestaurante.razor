@@ -1,0 +1,67 @@
+@page "/editar-restaurante/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using BlazorAppWithServer.Shared.Models
+
+<h3>Editar Restaurante</h3>
+
+<EditForm Model="restaurantRequest" OnValidSubmit="EditarRestaurant">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Nombre del Restaurante</label>
+        <InputText id="name" class="form-control" @bind-Value="restaurantRequest.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="tableCount">Cantidad de Mesas</label>
+        <InputNumber id="tableCount" class="form-control" @bind-Value="restaurantRequest.TableCount" />
+    </div>
+
+    <div class="form-group">
+        <label for="latitude">Latitud</label>
+        <InputNumber id="latitude" class="form-control" @bind-Value="restaurantRequest.Latitude" />
+    </div>
+
+    <div class="form-group">
+        <label for="longitude">Longitud</label>
+        <InputNumber id="longitude" class="form-control" @bind-Value="restaurantRequest.Longitude" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+</EditForm>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private RestaurantRequest restaurantRequest = new RestaurantRequest();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Llegue al Obtener Restaurant");
+        var response = await Http.GetFromJsonAsync<RestaurantRequest>($"api/restaurant/{Id}");
+        Console.WriteLine("Pasé el get");
+        restaurantRequest = response;
+    }
+
+    private async Task EditarRestaurant()
+    {
+        
+        var response = await Http.PutAsJsonAsync($"api/restaurant/update/{Id}", restaurantRequest);
+        
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/administracion"); // Volver a administración
+        }
+        else
+        {
+            // Manejar errores
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/administracion");
+    }
+}

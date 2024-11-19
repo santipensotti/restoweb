@@ -28,7 +28,7 @@ namespace BlazorAppWithServer.Server.Controllers
                 return BadRequest(new { message = $"Error al procesar el pedido: {ex.Message}" });
             }
         }
-
+        /*
         [HttpPost("createRestaurant")]
         public IActionResult CreateRestaurant(int countTables)
         {
@@ -38,7 +38,7 @@ namespace BlazorAppWithServer.Server.Controllers
             RestaurantRepository.AddRestaurant(countTables);
             return Ok(new { message = "Restaurant created successfully" });
         }
-
+        */
         [HttpPost("restaurant/menuitem")]
         public IActionResult AddMenuItem([FromBody] MenuItemRequest request)
         {

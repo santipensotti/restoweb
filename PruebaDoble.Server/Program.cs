@@ -1,3 +1,4 @@
+using BlazorAppWithServer.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
 using PruebaDoble.Server.Services;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Agregar servicios al contenedor.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<RestaurantService>();
 
 // Configurar CORS
 builder.Services.AddCors(options =>
@@ -13,8 +15,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowBlazorApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5121") // URL de tu aplicación Blazor
-                  .AllowAnyHeader()
+            policy.WithOrigins("http://localhost:5121", "https://localhost:7009") // URL de tu aplicación Blazor
+                 .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });

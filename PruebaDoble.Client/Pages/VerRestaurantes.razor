@@ -1,0 +1,56 @@
+@page "/ver-restaurantes"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using BlazorAppWithServer.Shared.Models
+
+<h3>Restaurantes Existentes</h3>
+
+@if (restaurants != null)
+{
+    <ul>
+        @foreach (var restaurant in restaurants)
+        {
+            <li>
+                <button @onclick="() => ToggleDetails(restaurant.Id)">
+                    @restaurant.Name
+                </button>
+
+                @if (restaurant.ShowDetails)
+                {
+                    <div>
+                        <p><strong>Mesas:</strong> @restaurant.TablesCount</p>
+                        <p><strong>Latitud:</strong> @restaurant.Latitude</p>
+                        <p><strong>Longitud:</strong> @restaurant.Longitude</p>
+                        <button @onclick="() => EditRestaurant(restaurant.Id)">Editar</button>
+                    </div>
+                }
+            </li>
+        }
+    </ul>
+}
+
+<button @onclick="LoadRestaurants">Cargar Restaurantes</button>
+
+@code {
+    private List<RestaurantViewModel> restaurants;
+
+    private async Task LoadRestaurants()
+    {
+        var response = await Http.GetFromJsonAsync<List<RestaurantViewModel>>("api/restaurant/all");
+        restaurants = response;
+    }
+
+    private void ToggleDetails(int restaurantId)
+    {
+        var restaurant = restaurants.FirstOrDefault(r => r.Id == restaurantId);
+        if (restaurant != null)
+        {
+            restaurant.ShowDetails = !restaurant.ShowDetails; // Toggle el estado de ShowDetails
+        }
+    }
+
+    private void EditRestaurant(int id)
+    {
+        Navigation.NavigateTo($"/editar-restaurante/{id}");
+    }
+}

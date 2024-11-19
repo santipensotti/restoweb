@@ -1,0 +1,50 @@
+@page "/crear-restaurante"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using BlazorAppWithServer.Shared.Models
+
+<h3>Crear Restaurante</h3>
+
+<EditForm Model="restaurantRequest" OnValidSubmit="CrearRestaurant">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Nombre del Restaurante</label>
+        <InputText id="name" class="form-control" @bind-Value="restaurantRequest.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="tableCount">Cantidad de Mesas</label>
+        <InputNumber id="tableCount" class="form-control" @bind-Value="restaurantRequest.TableCount" />
+    </div>
+
+    <div class="form-group">
+        <label for="latitude">Latitud</label>
+        <InputNumber id="latitude" class="form-control" @bind-Value="restaurantRequest.Latitude" />
+    </div>
+
+    <div class="form-group">
+        <label for="longitude">Longitud</label>
+        <InputNumber id="longitude" class="form-control" @bind-Value="restaurantRequest.Longitude" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Restaurante</button>
+</EditForm>
+
+@code {
+    private RestaurantRequest restaurantRequest = new RestaurantRequest();
+
+    private async Task CrearRestaurant()
+    {
+        var response = await Http.PostAsJsonAsync("api/restaurant/create", restaurantRequest);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/administracion"); // Volver a la administración
+        }
+        else
+        {
+            Console.WriteLine($"Error: {response.StatusCode}");
+        }
+    }
+}

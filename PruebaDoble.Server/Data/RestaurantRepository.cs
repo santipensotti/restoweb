@@ -9,20 +9,30 @@ namespace BlazorAppWithServer.Server.Data;
 
 public static class RestaurantRepository
 {
-    private static List<Restaurant> _restaurants = new()
-    {
-        new Restaurant(1,1),
-        new Restaurant(2, 2),
-        new Restaurant(3, 3)
-    };
+    private static List<Restaurant> _restaurants = new List<Restaurant>();
 
-    private static readonly string filePath = "restaurants.json";
-
-    public static int AddRestaurant(int countMesas)
+    public static int GetNextId()
     {
-        int newId = _restaurants.Count;
-        _restaurants.Add(new Restaurant(newId, countMesas));
-        return newId;
+        return _restaurants.Count;  // El siguiente ID es el tamaño de la lista
+    }
+
+
+    public static void AddRestaurant(Restaurant restaurant)
+    {
+        _restaurants.Add(restaurant);
+    }
+
+    public static List<Restaurant> GetAllRestaurants()
+    {
+        return _restaurants;
+    }
+
+    public static Restaurant GetRestaurant(int id)
+    {
+        if (id < 0 || id >= _restaurants.Count)
+            throw new ArgumentException("ID de restaurante no válido");
+
+        return _restaurants[id];
     }
 
     public static void AddItemToMenu(int restaurantId, int price, string name)
@@ -75,60 +85,9 @@ public static class RestaurantRepository
         return _restaurants[id].getCountOfTables();
     }
 
-    public static List<Restaurant> GetAllRestaurants()
-    {
-        return _restaurants;
-    }
-
-    public static Restaurant GetRestaurant(int id)
-    {
-        if (id < 0 || id >= _restaurants.Count)
-            throw new ArgumentException("ID de restaurante no válido");
-
-        return _restaurants[id];
-    }
-
     public static int getPriceOfItemFromARestaurant(int id, string item)
     {
         return _restaurants[id].getPriceOfItem(item);
     }
 
-    public static async Task GuardarEstados()
-    {
-        var estados = new List<object>();
-
-        // Recorre cada restaurante y obtiene su estado
-        foreach (var restaurant in _restaurants)
-        {
-            estados.Add(restaurant.getState());
-        }
-
-        // Guarda todos los estados en un único archivo JSON
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            await JsonSerializer.SerializeAsync(stream, estados, options);
-        }
-    }
-    public static async Task LoadStates()
-    {
-        if (!File.Exists(filePath))
-            return;
-
-        using (var stream = new FileStream(filePath, FileMode.Open))
-        {
-            var estados = await JsonSerializer.DeserializeAsync<List<RestaurantState>>(stream);
-            if (estados != null)
-            {
-                _restaurants.Clear();
-                foreach (var estado in estados)
-                {
-                    Console.WriteLine(estado.Id);
-                    var restaurant = new Restaurant(estado.Id, estado.Tables.Count);
-                    restaurant.loadState(estado);
-                    _restaurants.Add(restaurant);
-                }
-            }
-        }
-    }
 }
