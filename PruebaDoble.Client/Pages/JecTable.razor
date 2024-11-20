@@ -1,0 +1,195 @@
+@page "/jectable/{restoId}/{tableId}"
+@inject HttpClient Http
+@using System.Text.Json
+@using BlazorAppWithServer.Shared.Models
+
+<PageTitle>Mesa @tableId</PageTitle>
+
+<div class="container mt-4">
+    <h1>Mesa @tableId</h1>
+    
+    @if (error != null)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    @if (menuItems != null)
+    {
+        <div class="row">
+            @foreach (var item in menuItems)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">$@item.Price</p>
+                            <div class="d-flex">
+                                <button class="btn btn-secondary me-2" @onclick="() => DecreaseQuantity(item.Name)">-</button>
+                                <span>@GetQuantity(item.Name)</span>
+                                <button class="btn btn-secondary ms-2" @onclick="() => IncreaseQuantity(item.Name)">+</button>
+                            </div>
+                            <button class="btn btn-primary mt-2" @onclick="() => AddToOrder(item.Name)">
+                                Ordenar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (orders?.Any() == true)
+    {
+        <div class="mt-4">
+            <h3>Pedidos Actuales</h3>
+            <ul class="list-group">
+                @foreach (var order in orders)
+                {
+                    <li class="list-group-item">
+                        Pedido: @order.MenuItem.Name - Estado: @order.State
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string restoId { get; set; }
+
+    [Parameter]
+    public string tableId { get; set; }
+
+    private List<MenuItem> menuItems = new List<MenuItem>();
+    private List<Order> orders = new List<Order>();
+    private Dictionary<string, int> quantities = new Dictionary<string, int>();
+    private string error;
+
+    private Timer pollingTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+        StartPolling();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Este método se ejecutará cada vez que los parámetros cambien (cuando cambie la ruta)
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            // Cargar menú del restaurante
+            menuItems = await Http.GetFromJsonAsync<List<MenuItem>>($"api/order/menu/{restoId}");
+            
+            // Cargar órdenes de la mesa, incluyendo el estado de cada una
+            var response = await Http.GetFromJsonAsync<List<Order>>($"api/order/tableOrders/{restoId}/{tableId}");
+            orders = response ?? new List<Order>();
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al cargar datos: {ex.Message}";
+            Console.WriteLine($"Error detallado: {ex}");
+        }
+    }
+
+    private void StartPolling()
+    {
+        pollingTimer = new Timer(async _ =>
+        {
+            try
+            {
+                // Poll for new data
+                var response = await Http.GetFromJsonAsync<List<Order>>($"api/order/tableOrders/{restoId}/{tableId}");
+                if (response != null && !response.SequenceEqual(orders))
+                {
+                    orders = response;
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+            catch (Exception ex)
+            {
+                error = $"Error al realizar la consulta: {ex.Message}";
+                Console.WriteLine($"Error detallado: {ex}");
+            }
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5)); // Poll every 5 seconds
+    }
+
+    private void IncreaseQuantity(string itemName)
+    {
+        if (quantities.ContainsKey(itemName))
+        {
+            quantities[itemName]++;
+        }
+        else
+        {
+            quantities[itemName] = 1;
+        }
+    }
+
+    private void DecreaseQuantity(string itemName)
+    {
+        if (quantities.ContainsKey(itemName) && quantities[itemName] > 0)
+        {
+            quantities[itemName]--;
+            if (quantities[itemName] == 0)
+            {
+                quantities.Remove(itemName);
+            }
+        }
+    }
+
+    private int GetQuantity(string itemName)
+    {
+        return quantities.ContainsKey(itemName) ? quantities[itemName] : 0;
+    }
+
+    private async Task AddToOrder(string itemName)
+    {
+        try
+        {
+            if (!quantities.ContainsKey(itemName) || quantities[itemName] == 0)
+            {
+                error = "La cantidad debe ser mayor a 0";
+                return;
+            }
+
+            int quantity = quantities[itemName];
+            for (int i = 0; i < quantity; i++)
+            {
+                var request = new OrderRequest 
+                { 
+                    RestoId = int.Parse(restoId),
+                    TableId = int.Parse(tableId), 
+                    MenuItem = new MenuItem { Name = itemName, Price = 0 } // Asumiendo que el precio no es necesario para el pedido
+                };
+
+                var response = await Http.PostAsJsonAsync("api/order/send", request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    error = $"Error al enviar el pedido: {errorContent}";
+                    return;
+                }
+            }
+
+            // Actualizar el estado después de enviar el pedido
+            await LoadData();
+            quantities[itemName] = 0; // Reiniciar la cantidad después de agregar
+        }
+        catch (Exception ex)
+        {
+            error = $"Error al agregar pedido: {ex.Message}";
+        }
+    }
+
+    public void Dispose()
+    {
+        pollingTimer?.Dispose();
+    }
+}

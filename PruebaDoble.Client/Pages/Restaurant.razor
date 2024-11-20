@@ -83,7 +83,6 @@ else
         <p>No hay órdenes en este momento.</p>
     }
 </div>
-
 @code {
     [Parameter]
     public string restoId { get; set; }
@@ -94,13 +93,15 @@ else
     private int tableCount;
     private string error;
 
-
     private Dictionary<int, List<Order>> tableOrders = new Dictionary<int, List<Order>>(); // Cambiado a Order
+
+    private Timer pollingTimer;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadData();
         await LoadOrdersByRestaurant();
+        StartPolling();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -141,6 +142,23 @@ else
         {
             error = $"Error al cargar órdenes: {ex.Message}";
         }
+    }
+
+    private void StartPolling()
+    {
+        pollingTimer = new Timer(async _ =>
+        {
+            try
+            {
+                await LoadData();
+                await LoadOrdersByRestaurant();
+                await InvokeAsync(StateHasChanged); // Ensure UI updates are done on the main thread
+            }
+            catch (Exception ex)
+            {
+                error = $"Error during polling: {ex.Message}";
+            }
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(10)); // Poll every 10 seconds
     }
 
     private async Task AgregarItem()
@@ -194,32 +212,32 @@ else
         }
     }
 
-   private async Task ActualizarEstadoOrden(int tableId, int orderId, OrderState newState)
-{
-    try
+    private async Task ActualizarEstadoOrden(int tableId, int orderId, OrderState newState)
     {
-        var response = await Http.PostAsJsonAsync("api/order/updateState", new OrderDeliveryRequest
+        try
         {
-            RestoId = int.Parse(restoId),
-            TableId = tableId,
-            OrderId = orderId,
-            NewState = newState
-        });
+            var response = await Http.PostAsJsonAsync("api/order/updateState", new OrderDeliveryRequest
+            {
+                RestoId = int.Parse(restoId),
+                TableId = tableId,
+                OrderId = orderId,
+                NewState = newState
+            });
 
-        if (response.IsSuccessStatusCode)
-        {
-            await LoadOrdersByRestaurant();
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadOrdersByRestaurant();
+            }
+            else
+            {
+                error = $"Error al actualizar el estado de la orden: {orderId}";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            error = $"Error al actualizar el estado de la orden: {orderId}";
+            error = $"Error: {ex.Message}";
         }
     }
-    catch (Exception ex)
-    {
-        error = $"Error: {ex.Message}";
-    }
-}
 
     private async Task EliminarOrden(int tableId, int orderId)
     {
@@ -239,5 +257,10 @@ else
         {
             error = $"Error: {ex.Message}";
         }
+    }
+
+    public void Dispose()
+    {
+        pollingTimer?.Dispose();
     }
 }
