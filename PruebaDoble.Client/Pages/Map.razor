@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject IJSRuntime JS
 @using System.Text.Json.Serialization
+@using BlazorAppWithServer.Shared.Models
 
 
 <h3>Mi Mapa</h3>
@@ -10,7 +11,7 @@
 @code {
     private double Latitude { get; set; }
     private double Longitude { get; set; }
-    private List<Point> puntos = new();
+    private List<RestaurantMapInfo> puntos = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -29,27 +30,20 @@
         Longitude = location[1];
 
         // Agrega la ubicación actual a la lista de puntos
-        puntos.Add(new Point { Lat = Latitude, Lng = Longitude });
+        puntos.Add(new RestaurantMapInfo
+        {
+            Id = 0, // ID ficticio para la ubicación del usuario
+            Lat = Latitude,
+            Lng = Longitude,
+            Name = "Tu Ubicación",
+            TablesCount = 0
+        });
 
         // Llama al API para obtener las coordenadas de los restaurantes
-        var coordinates = await Http.GetFromJsonAsync<List<Point>>("api/restaurant/getMaps");
+        var coordinates = await Http.GetFromJsonAsync<List<RestaurantMapInfo>>("api/restaurant/getMaps");
         if (coordinates != null)
         {
             puntos.AddRange(coordinates);
         }
-        else
-        {
-            // Manejo de errores o respuesta vacía
-        }
-    }
-
-    // Clase para representar un punto en el mapa
-    public class Point
-    {
-        [JsonPropertyName("lat")]
-        public double Lat { get; set; }
-
-        [JsonPropertyName("lng")]
-        public double Lng { get; set; }
     }
 }

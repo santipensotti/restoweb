@@ -113,12 +113,12 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
         [HttpGet("getMaps")]
-        public ActionResult<List<Point>> GetLocations()
+        public ActionResult<List<RestaurantMapInfo>> GetLocations()
         {
             try
             {
-                var coordinates = RestaurantRepository.GetAllRestaurantCoordinates();
-                return Ok(coordinates);
+                var restaurantInfos = _restaurantService.GetInfoRestaurantForMaps();
+                return Ok(restaurantInfos);
             }
             catch (Exception ex)
             {

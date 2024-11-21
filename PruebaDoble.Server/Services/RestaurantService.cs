@@ -51,4 +51,17 @@ public class RestaurantService
         return restaurant;
     }
 
+    public List<RestaurantMapInfo> GetInfoRestaurantForMaps()
+    {
+        var restaurants = RestaurantRepository.GetAllRestaurants();
+        return restaurants.Select(r => new RestaurantMapInfo
+        {
+            Id = r.Id, // Incluye el Id del restaurante
+            Lat = r.Latitude,
+            Lng = r.Longitude,
+            Name = r.Name,
+            TablesCount = r.getCountOfTables()
+        }).ToList();
+    }
+
 }
