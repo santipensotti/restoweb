@@ -1,0 +1,25 @@
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card-body .details p {
+    margin: 5px 0;
+}
+
+.btn-group .btn {
+    margin: 0 5px;
+}
+
+h3 {
+    color: #333;
+}
+
+body {
+    background-color: #f8f9fa;
+}

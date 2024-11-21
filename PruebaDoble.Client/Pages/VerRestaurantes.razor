@@ -3,47 +3,85 @@
 @inject NavigationManager Navigation
 @using BlazorAppWithServer.Shared.Models
 
-<h3>Restaurantes Existentes</h3>
+<div class="container mt-5">
+    <h1 class="text-center text-primary">Restaurantes Existentes</h1>
+    <p class="lead text-muted text-center">Consulta la lista de restaurantes, edita detalles o administra sus mesas</p>
 
-@if (restaurants != null)
-{
-    <ul>
-        @foreach (var restaurant in restaurants)
-        {
-            <li>
-                <button @onclick="() => ToggleDetails(restaurant.Id)">
-                    @restaurant.Name
-                </button>
-
-                @if (restaurant.ShowDetails)
-                {
-                    <div>
-                        <p><strong>Mesas:</strong> @restaurant.TablesCount</p>
-                        <p><strong>Latitud:</strong> @restaurant.Latitude</p>
-                        <p><strong>Longitud:</strong> @restaurant.Longitude</p>
-                        <button @onclick="() => EditRestaurant(restaurant.Id)">Editar</button>
-
-                        <!-- Boton para administrar el Restaurante  -->
-                        <button @onclick="() => AdminRestaurant(restaurant.Id)">Administrá tu restaurante</button>
-
-                        <!-- Generar QR -->
-                        <button @onclick="() => GenerateAllQRCodes(restaurant.Id, restaurant.TablesCount)">Generar QR para todas las mesas</button>
+    @if (restaurants != null)
+    {
+        <div class="row mt-4">
+            @foreach (var restaurant in restaurants)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h5>@restaurant.Name</h5>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-secondary btn-block mb-3" @onclick="() => ToggleDetails(restaurant.Id)">
+                                Ver Detalles
+                            </button>
+                            @if (restaurant.ShowDetails)
+                            {
+                                <div class="details">
+                                    <p><strong>Mesas:</strong> @restaurant.TablesCount</p>
+                                    <p><strong>Latitud:</strong> @restaurant.Latitude</p>
+                                    <p><strong>Longitud:</strong> @restaurant.Longitude</p>
+                                    <div class="btn-group d-flex mt-3">
+                                        <button class="btn btn-info flex-fill" @onclick="() => EditRestaurant(restaurant.Id)">
+                                            Editar
+                                        </button>
+                                        <button class="btn btn-warning flex-fill" @onclick="() => AdminRestaurant(restaurant.Id)">
+                                            Administrar
+                                        </button>
+                                        <button class="btn btn-success flex-fill" @onclick="() => GenerateAllQRCodes(restaurant.Id, restaurant.TablesCount)">
+                                            Generar QR
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
-                }
-            </li>
-        }
-    </ul>
-}
-
-<button @onclick="LoadRestaurants">Cargar Restaurantes</button>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-center mt-5">Cargando restaurantes...</p>
+    }
+</div>
 
 @code {
     private List<RestaurantViewModel> restaurants;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRestaurants();
+        _ = StartAutoRefresh();
+    }
+
+    private async Task StartAutoRefresh()
+    {
+        while (true)
+        {
+            await Task.Delay(5000);
+            await LoadRestaurants();
+            StateHasChanged();
+        }
+    }
+
     private async Task LoadRestaurants()
     {
-        var response = await Http.GetFromJsonAsync<List<RestaurantViewModel>>("api/restaurant/all");
-        restaurants = response;
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<RestaurantViewModel>>("api/restaurant/all");
+            restaurants = response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error cargando restaurantes: {ex.Message}");
+        }
     }
 
     private void ToggleDetails(int restaurantId)
@@ -51,7 +89,7 @@
         var restaurant = restaurants.FirstOrDefault(r => r.Id == restaurantId);
         if (restaurant != null)
         {
-            restaurant.ShowDetails = !restaurant.ShowDetails; 
+            restaurant.ShowDetails = !restaurant.ShowDetails;
         }
     }
 

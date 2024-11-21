@@ -5,7 +5,7 @@ using BlazorAppWithServer.Shared.Models;
 public class RestaurantService
 {
 
-    // Lógica para crear un restaurante
+    // Lï¿½gica para crear un restaurante
     public void CreateRestaurant(RestaurantRequest restaurantRequest)
     {
         // Obtener el siguiente ID desde el repositorio
@@ -24,7 +24,7 @@ public class RestaurantService
         RestaurantRepository.AddRestaurant(newRestaurant);
     }
 
-    // Lógica para actualizar un restaurante
+    // Lï¿½gica para actualizar un restaurante
     public void UpdateRestaurant(int id, RestaurantRequest restaurantRequest)
     {
         var restaurant = RestaurantRepository.GetRestaurant(id);
@@ -54,10 +54,24 @@ public class RestaurantService
         }).ToList();
     }
 
-    public Restaurant GetRestaurantById(int id)
+    public RestaurantRequest GetRestaurantRequestById(int id)
     {
         var restaurant = RestaurantRepository.GetRestaurant(id);
-        return restaurant;
+        if (restaurant == null)
+        {
+            throw new Exception($"Restaurant with ID {id} not found.");
+        }
+
+        // Construir el objeto RestaurantRequest
+        var restaurantRequest = new RestaurantRequest
+        {
+            Name = restaurant.Name,
+            TableCount = restaurant.getCountOfTables(),
+            Latitude = restaurant.Latitude,
+            Longitude = restaurant.Longitude
+        };
+
+        return restaurantRequest;
     }
 
     public List<RestaurantMapInfo> GetInfoRestaurantForMaps()

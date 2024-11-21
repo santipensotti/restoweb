@@ -2,10 +2,19 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<h3>Administracion</h3>
+<div class="container text-center mt-5">
+    <h1 class="mb-4 text-primary">Administración de Restaurantes</h1>
+    <p class="lead text-muted">Gestiona los restaurantes de manera rápida y sencilla</p>
 
-<button @onclick="GoToCrearRestaurant">Crear un nuevo Restaurante</button>
-<button @onclick="GoToVerRestaurantes">Ver Restaurantes Existentes</button>
+    <div class="d-grid gap-4 col-6 mx-auto mt-5">
+        <button class="btn btn-success btn-lg shadow" @onclick="GoToCrearRestaurant">
+            <i class="bi bi-plus-circle"></i> Crear un nuevo Restaurante
+        </button>
+        <button class="btn btn-primary btn-lg shadow" @onclick="GoToVerRestaurantes">
+            <i class="bi bi-list"></i> Ver Restaurantes Existentes
+        </button>
+    </div>
+</div>
 
 @code {
     private void GoToCrearRestaurant()

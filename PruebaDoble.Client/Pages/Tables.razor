@@ -117,7 +117,7 @@
                 error = $"Error al realizar la consulta: {ex.Message}";
                 Console.WriteLine($"Error detallado: {ex}");
             }
-        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5)); // Poll every 5 seconds
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5)); 
     }
 
     private void IncreaseQuantity(string itemName)

@@ -1,39 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Server\\PruebaDoble.Server.csproj": {}
+    "/Users/penso/restoweb/PruebaDoble.Server/PruebaDoble.Server.csproj": {}
   },
   "projects": {
-    "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Client\\PruebaDoble.Client.csproj": {
+    "/Users/penso/restoweb/PruebaDoble.Client/PruebaDoble.Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Client\\PruebaDoble.Client.csproj",
+        "projectUniqueName": "/Users/penso/restoweb/PruebaDoble.Client/PruebaDoble.Client.csproj",
         "projectName": "PruebaDoble.Client",
-        "projectPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Client\\PruebaDoble.Client.csproj",
-        "packagesPath": "C:\\Users\\penso\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Client\\obj\\",
+        "projectPath": "/Users/penso/restoweb/PruebaDoble.Client/PruebaDoble.Client.csproj",
+        "packagesPath": "/Users/penso/.nuget/packages/",
+        "outputPath": "/Users/penso/restoweb/PruebaDoble.Client/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\penso\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/penso/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {
-                "projectPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj"
+              "/Users/penso/restoweb/PruebaDoble.Shared/PruebaDoble.Shared.csproj": {
+                "projectPath": "/Users/penso/restoweb/PruebaDoble.Shared/PruebaDoble.Shared.csproj"
               }
             }
           }
@@ -46,9 +40,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -66,13 +59,13 @@
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.11, )",
+              "version": "[8.0.10, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.0, )",
+              "version": "[8.0.10, )",
               "autoReferenced": true
             }
           },
@@ -90,7 +83,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[8.0.11, 8.0.11]"
+              "version": "[8.0.10, 8.0.10]"
             }
           ],
           "frameworkReferences": {
@@ -98,7 +91,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
@@ -107,39 +100,33 @@
         }
       }
     },
-    "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Server\\PruebaDoble.Server.csproj": {
+    "/Users/penso/restoweb/PruebaDoble.Server/PruebaDoble.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Server\\PruebaDoble.Server.csproj",
+        "projectUniqueName": "/Users/penso/restoweb/PruebaDoble.Server/PruebaDoble.Server.csproj",
         "projectName": "PruebaDoble.Server",
-        "projectPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Server\\PruebaDoble.Server.csproj",
-        "packagesPath": "C:\\Users\\penso\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Server\\obj\\",
+        "projectPath": "/Users/penso/restoweb/PruebaDoble.Server/PruebaDoble.Server.csproj",
+        "packagesPath": "/Users/penso/.nuget/packages/",
+        "outputPath": "/Users/penso/restoweb/PruebaDoble.Server/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\penso\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/penso/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Client\\PruebaDoble.Client.csproj": {
-                "projectPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Client\\PruebaDoble.Client.csproj"
+              "/Users/penso/restoweb/PruebaDoble.Client/PruebaDoble.Client.csproj": {
+                "projectPath": "/Users/penso/restoweb/PruebaDoble.Client/PruebaDoble.Client.csproj"
               },
-              "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {
-                "projectPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj"
+              "/Users/penso/restoweb/PruebaDoble.Shared/PruebaDoble.Shared.csproj": {
+                "projectPath": "/Users/penso/restoweb/PruebaDoble.Shared/PruebaDoble.Shared.csproj"
               }
             }
           }
@@ -152,9 +139,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -192,32 +178,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj": {
+    "/Users/penso/restoweb/PruebaDoble.Shared/PruebaDoble.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
+        "projectUniqueName": "/Users/penso/restoweb/PruebaDoble.Shared/PruebaDoble.Shared.csproj",
         "projectName": "PruebaDoble.Shared",
-        "projectPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\PruebaDoble.Shared.csproj",
-        "packagesPath": "C:\\Users\\penso\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\penso\\Desktop\\aa\\restoweb\\PruebaDoble.Shared\\obj\\",
+        "projectPath": "/Users/penso/restoweb/PruebaDoble.Shared/PruebaDoble.Shared.csproj",
+        "packagesPath": "/Users/penso/.nuget/packages/",
+        "outputPath": "/Users/penso/restoweb/PruebaDoble.Shared/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\penso\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/penso/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -234,9 +214,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -263,7 +242,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

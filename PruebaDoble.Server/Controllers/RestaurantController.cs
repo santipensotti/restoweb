@@ -67,14 +67,7 @@ namespace BlazorAppWithServer.Server.Controllers
             
             try
             {
-                var restaurant = _restaurantService.GetRestaurantById(id); 
-                var restaurantRequest = new RestaurantRequest
-                {
-                    Name = restaurant.Name,
-                    TableCount = restaurant.getCountOfTables(),
-                    Latitude = restaurant.Latitude,
-                    Longitude = restaurant.Longitude
-                };
+                var restaurantRequest = _restaurantService.GetRestaurantRequestById(id);
 
                 return Ok(restaurantRequest);
             }

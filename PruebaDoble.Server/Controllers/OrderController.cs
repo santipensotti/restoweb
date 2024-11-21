@@ -105,14 +105,6 @@ namespace BlazorAppWithServer.Server.Controllers
             try
             {
                 var menu = RestaurantRepository.getMenuOfARestaurant(restaurantId);
-                if (menu == null || !menu.Any())
-                {
-                    // Si el menú está vacío, agregar algunos ítems predeterminados
-                    RestaurantRepository.AddItemToMenu(restaurantId, 100, "Pizza");
-                    RestaurantRepository.AddItemToMenu(restaurantId, 150, "Hamburguesa");
-                    RestaurantRepository.AddItemToMenu(restaurantId, 80, "Ensalada");
-                    menu = RestaurantRepository.getMenuOfARestaurant(restaurantId);
-                }
                 return Ok(menu.Select(item => new MenuItem { Name = item.Item1, Price = item.Item2 }).ToList());
             }
             catch (Exception ex)
