@@ -11,7 +11,6 @@ namespace BlazorAppWithServer.Server.Controllers
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
-        // Endpoint para recibir un nuevo pedido y agregarlo a la mesa
         [HttpPost("send")]
         public IActionResult SendMessage([FromBody] OrderRequest request)
         {
@@ -20,7 +19,6 @@ namespace BlazorAppWithServer.Server.Controllers
 
             try
             {
-                // Crear la nueva orden con los detalles proporcionados
                 var order = new Order
                 {
                     OrderId = new Random().Next(1, 10000), // Generar un ID de orden aleatorio, se puede mejorar
@@ -28,10 +26,7 @@ namespace BlazorAppWithServer.Server.Controllers
                     State = OrderState.Pending
                 };
 
-                // Agregar la orden a la mesa correspondiente
-                OrdersRepository.AddOrderForTable(request.RestoId, request.TableId, order);
-
-                // Enviar un mensaje (opcional)
+                OrdersRepository.AddOrderForTable(request.RestoId, request.TableId, order);             
                 MessagesRepository.AddMessage($"Mesa {request.TableId}: {request.MenuItem.Name}");
 
                 return Ok(new { message = "Order sent successfully", orderId = order.OrderId });
@@ -42,7 +37,6 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-        // Endpoint para marcar un pedido como entregado
         [HttpPost("deliver")]
         public IActionResult DeliverOrder([FromBody] OrderDeliveryRequest request)
         {
@@ -59,7 +53,6 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-        // Endpoint para obtener los pedidos de una mesa
         [HttpGet("tableOrders/{restoId}/{tableId}")]
         public ActionResult<List<Order>> GetTableOrders(int restoId, int tableId)
         {
@@ -78,7 +71,6 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-        // Endpoint para obtener todos los pedidos de un restaurante
         [HttpGet("tableOrders/{restoId}")]
         public ActionResult<Dictionary<int, List<Order>>> GetOrdersByRestaurantId(int restoId)
         {
@@ -104,7 +96,6 @@ namespace BlazorAppWithServer.Server.Controllers
             }
         }
 
-        // Endpoint para obtener el menú de un restaurante
         [HttpGet("menu/{restaurantId}")]
         public ActionResult<List<MenuItem>> GetRestaurantMenu(int restaurantId)
         {
@@ -131,7 +122,7 @@ namespace BlazorAppWithServer.Server.Controllers
         }
 
 
-        // Endpoint para actualizar el estado de una orden
+        
         [HttpPost("updateState")]
         public IActionResult UpdateOrderState([FromBody] OrderDeliveryRequest request)
         {

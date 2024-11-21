@@ -10,10 +10,8 @@ public class Restaurant
     private Menu _menu;
     private List<Table> _tables;
 
-    // Propiedad pública para acceder al ID
-    public int Id => _id;  // Propiedad solo de lectura
+    public int Id => _id;
 
-    // NUEVOS CAMPOS
     public string Name { get; private set; }
     public double Latitude { get; private set; }
     public double Longitude { get; private set; }
@@ -33,21 +31,19 @@ public class Restaurant
         this.Name = name;
         this.Latitude = latitude;
         this.Longitude = longitude;
-        AddTables(countTables);  // Aquí actualizamos las mesas
+        AddTables(countTables);  
     }
 
     public void AddTables(int countTables)
     {
 
-        _tables.Clear();  // Borramos las mesas existentes
-        // Ahora agregamos las nuevas mesas
+        _tables.Clear();
         for (int i = 0; i < countTables; i++)
         {
-            _tables.Add(new Table(i));  // Aquí creamos nuevas mesas
+            _tables.Add(new Table(i));
         }
     }
 
-    // a dictionary may be better?
     public void addToMenu(MenuItem elem)
     {
         _menu.addMenuItem(elem);
