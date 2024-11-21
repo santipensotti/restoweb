@@ -22,6 +22,9 @@
                         <p><strong>Latitud:</strong> @restaurant.Latitude</p>
                         <p><strong>Longitud:</strong> @restaurant.Longitude</p>
                         <button @onclick="() => EditRestaurant(restaurant.Id)">Editar</button>
+
+                        <!-- Generar QR -->
+                        <button @onclick="() => GenerateAllQRCodes(restaurant.Id, restaurant.TablesCount)">Generar QR para todas las mesas</button>
                     </div>
                 }
             </li>
@@ -52,5 +55,11 @@
     private void EditRestaurant(int id)
     {
         Navigation.NavigateTo($"/editar-restaurante/{id}");
+    }
+
+    private void GenerateAllQRCodes(int restaurantId, int tablesCount)
+    {
+        // Redirige a la página de generación de QR con el restaurantId y la cantidad total de mesas
+        Navigation.NavigateTo($"/qr/{restaurantId}/{tablesCount}");
     }
 }

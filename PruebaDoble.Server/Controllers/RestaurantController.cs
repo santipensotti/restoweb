@@ -51,17 +51,8 @@ namespace BlazorAppWithServer.Server.Controllers
         {
             try
             {
-                var restaurants = _restaurantService.GetAllRestaurants(); // Aseg�rate de que este m�todo exista
-                var result = restaurants.Select(r => new RestaurantViewModel
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    TablesCount = r.getCountOfTables(),
-                    Latitude = r.Latitude,
-                    Longitude = r.Longitude
-                }).ToList();
-
-                return Ok(result);
+                var restaurants = _restaurantService.GetAllRestaurants();
+                return Ok(restaurants);
             }
             catch (Exception ex)
             {

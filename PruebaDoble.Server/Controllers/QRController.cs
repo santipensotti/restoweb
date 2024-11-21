@@ -22,10 +22,13 @@ namespace PruebaDoble.Server.Controllers
         {
             try
             {
+                // Obtener la URL base desde el Request
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                var url = $"{baseUrl}/mesa/{restaurantId}/{tableId}";
-                var qrBytes = _qrService.GenerarCodigoQR(url);
-                
+
+                // Delegar al servicio para generar el código QR
+                var qrBytes = _qrService.GenerateQRCodeForTable(baseUrl, restaurantId, tableId);
+
+                // Devolver la imagen generada como respuesta
                 return File(qrBytes, "image/png");
             }
             catch (Exception ex)

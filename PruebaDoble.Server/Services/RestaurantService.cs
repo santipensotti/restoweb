@@ -40,9 +40,18 @@ public class RestaurantService
         }
     }
 
-    public List<Restaurant> GetAllRestaurants()
+    public List<RestaurantViewModel> GetAllRestaurants()
     {
-        return RestaurantRepository.GetAllRestaurants();
+        var restaurants = RestaurantRepository.GetAllRestaurants();
+        return restaurants.Select(r => new RestaurantViewModel
+        {
+            Id = r.Id,
+            Name = r.Name,
+            TablesCount = r.getCountOfTables(),
+            Latitude = r.Latitude,
+            Longitude = r.Longitude,
+            ShowDetails = false // Opcional: Inicializar si es requerido en el cliente
+        }).ToList();
     }
 
     public Restaurant GetRestaurantById(int id)
