@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BlazorAppWithServer.Shared.Models;
 using BlazorAppWithServer.Server.Data;
-//using static PruebaDoble.Client.Pages.VerRestaurantes;
+
 
 namespace BlazorAppWithServer.Server.Controllers
 {
@@ -51,7 +51,7 @@ namespace BlazorAppWithServer.Server.Controllers
         {
             try
             {
-                var restaurants = _restaurantService.GetAllRestaurants(); // Asegúrate de que este método exista
+                var restaurants = _restaurantService.GetAllRestaurants(); // Asegï¿½rate de que este mï¿½todo exista
                 var result = restaurants.Select(r => new RestaurantViewModel
                 {
                     Id = r.Id,
@@ -76,9 +76,9 @@ namespace BlazorAppWithServer.Server.Controllers
             Console.WriteLine("Llegue al controler");
             try
             {
-                var restaurant = _restaurantService.GetRestaurantById(id); // Suponiendo que tienes este método en tu servicio
+                var restaurant = _restaurantService.GetRestaurantById(id); // Suponiendo que tienes este mï¿½todo en tu servicio
 
-                // Aquí puedes crear el objeto RestaurantRequest que se pasa al frontend
+                // Aquï¿½ puedes crear el objeto RestaurantRequest que se pasa al frontend
                 var restaurantRequest = new RestaurantRequest
                 {
                     Name = restaurant.Name,
@@ -112,6 +112,20 @@ namespace BlazorAppWithServer.Server.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpGet("getMaps")]
+        public ActionResult<List<Point>> GetLocations()
+        {
+            try
+            {
+                var coordinates = RestaurantRepository.GetAllRestaurantCoordinates();
+                return Ok(coordinates);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
 
         [HttpPost("{restaurantId}/addtable")]
         public IActionResult AddTable(int restaurantId)

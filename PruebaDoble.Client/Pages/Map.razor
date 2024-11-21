@@ -1,7 +1,10 @@
 @page "/map"
+@inject HttpClient Http
 @inject IJSRuntime JS
+@using System.Text.Json.Serialization
 
-<h3>My Map</h3>
+
+<h3>Mi Mapa</h3>
 <div id="map" style="height: 500px;"></div>
 
 @code {
@@ -25,17 +28,28 @@
         Latitude = location[0];
         Longitude = location[1];
 
-        // Agrega la ubicación actual y otros puntos a la lista de puntos
+        // Agrega la ubicación actual a la lista de puntos
         puntos.Add(new Point { Lat = Latitude, Lng = Longitude });
-        puntos.Add(new Point { Lat = -34.6037, Lng = -58.3816 }); // Buenos Aires
-        puntos.Add(new Point { Lat = -34.6351, Lng = -58.3772 });
-        puntos.Add(new Point { Lat = -34.5862, Lng = -58.3989 });
+
+        // Llama al API para obtener las coordenadas de los restaurantes
+        var coordinates = await Http.GetFromJsonAsync<List<Point>>("api/restaurant/getMaps");
+        if (coordinates != null)
+        {
+            puntos.AddRange(coordinates);
+        }
+        else
+        {
+            // Manejo de errores o respuesta vacía
+        }
     }
 
     // Clase para representar un punto en el mapa
     public class Point
     {
+        [JsonPropertyName("lat")]
         public double Lat { get; set; }
+
+        [JsonPropertyName("lng")]
         public double Lng { get; set; }
     }
 }
