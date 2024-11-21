@@ -11,15 +11,15 @@ namespace PruebaDoble.Server.Services
     {
         private readonly string _secretKey = "TuCulito";  // Puede ser un valor configurable
 
-        // Método que genera el QR para una mesa específica
+        // Mï¿½todo que genera el QR para una mesa especï¿½fica
         public byte[] GenerateQRCodeForTable(string baseUrl, int restaurantId, int tableId)
         {
             try
             {
                 // Construir la URL completa usando el baseUrl
-                var url = $"{baseUrl}/mesa/{restaurantId}/{tableId}";
+                var url = $"{baseUrl}/table/{restaurantId}/{tableId}";
 
-                // Generar el código QR con la URL
+                // Generar el cï¿½digo QR con la URL
                 return GenerateQRCode(url);
             }
             catch (Exception ex)
@@ -29,7 +29,7 @@ namespace PruebaDoble.Server.Services
             }
         }
 
-        // Generación del QR a partir de un contenido
+        // Generaciï¿½n del QR a partir de un contenido
         public byte[] GenerateQRCode(string content)
         {
             using var qrGenerator = new QRCodeGenerator();
@@ -38,7 +38,7 @@ namespace PruebaDoble.Server.Services
             return qrCode.GetGraphic(20);
         }
 
-        // Si necesitas generar un hash único para la mesa (por ejemplo, para validar o para otras razones)
+        // Si necesitas generar un hash ï¿½nico para la mesa (por ejemplo, para validar o para otras razones)
         public string GenerateTableHash(int restaurantId, int tableId)
         {
             var dataToHash = $"{restaurantId}-{tableId}-{_secretKey}";

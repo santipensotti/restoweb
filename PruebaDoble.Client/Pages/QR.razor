@@ -76,7 +76,7 @@
                     var imageBytes = await response.Content.ReadAsByteArrayAsync();
                     var base64Image = Convert.ToBase64String(imageBytes);
                     var imageUrl = $"data:image/png;base64,{base64Image}";
-                    var url = $"{baseUrl}/mesa/{RestaurantId}/{mesaId}";
+                    var url = $"{baseUrl}/table/{RestaurantId}/{mesaId}";
                     
                     Console.WriteLine($"Generated QR for Mesa {mesaId}"); // Debug
                     Console.WriteLine($"Image URL length: {imageUrl.Length}"); // Debug
