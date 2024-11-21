@@ -66,9 +66,12 @@
     private Dictionary<string, int> quantities = new Dictionary<string, int>();
     private string error;
 
+    private Timer pollingTimer;
+
     protected override async Task OnInitializedAsync()
     {
         await LoadData();
+        StartPolling();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -93,6 +96,28 @@
             error = $"Error al cargar datos: {ex.Message}";
             Console.WriteLine($"Error detallado: {ex}");
         }
+    }
+
+    private void StartPolling()
+    {
+        pollingTimer = new Timer(async _ =>
+        {
+            try
+            {
+                // Poll for new data
+                var response = await Http.GetFromJsonAsync<List<Order>>($"api/order/tableOrders/{restoId}/{tableId}");
+                if (response != null && !response.SequenceEqual(orders))
+                {
+                    orders = response;
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+            catch (Exception ex)
+            {
+                error = $"Error al realizar la consulta: {ex.Message}";
+                Console.WriteLine($"Error detallado: {ex}");
+            }
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5)); // Poll every 5 seconds
     }
 
     private void IncreaseQuantity(string itemName)
@@ -161,5 +186,10 @@
         {
             error = $"Error al agregar pedido: {ex.Message}";
         }
+    }
+
+    public void Dispose()
+    {
+        pollingTimer?.Dispose();
     }
 }
