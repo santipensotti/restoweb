@@ -16,22 +16,6 @@ public static class RestaurantRepository
         return _restaurants.Count;  // El siguiente ID es el tamaño de la lista
     }
 
-    public static List<Point> GetAllRestaurantCoordinates()
-    {
-        List<Point> coordinates = new List<Point>();
-
-        foreach (var restaurant in _restaurants)
-        {
-            coordinates.Add(new Point
-            {
-                Lat = restaurant.Latitude,
-                Lng = restaurant.Longitude
-            });
-        }
-
-        return coordinates;
-    }
-
     public static void AddRestaurant(Restaurant restaurant)
     {
         _restaurants.Add(restaurant);

@@ -64,12 +64,10 @@ namespace BlazorAppWithServer.Server.Controllers
         [HttpGet("{id}")]
         public IActionResult GetRestaurantById(int id)
         {
-            Console.WriteLine("Llegue al controler");
+            
             try
             {
-                var restaurant = _restaurantService.GetRestaurantById(id); // Suponiendo que tienes este m�todo en tu servicio
-
-                // Aqu� puedes crear el objeto RestaurantRequest que se pasa al frontend
+                var restaurant = _restaurantService.GetRestaurantById(id); 
                 var restaurantRequest = new RestaurantRequest
                 {
                     Name = restaurant.Name,

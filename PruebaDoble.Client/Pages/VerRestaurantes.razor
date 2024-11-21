@@ -51,7 +51,7 @@
         var restaurant = restaurants.FirstOrDefault(r => r.Id == restaurantId);
         if (restaurant != null)
         {
-            restaurant.ShowDetails = !restaurant.ShowDetails; // Toggle el estado de ShowDetails
+            restaurant.ShowDetails = !restaurant.ShowDetails; 
         }
     }
 
@@ -67,7 +67,6 @@
 
     private void GenerateAllQRCodes(int restaurantId, int tablesCount)
     {
-        // Redirige a la p�gina de generaci�n de QR con el restaurantId y la cantidad total de mesas
         Navigation.NavigateTo($"/qr/{restaurantId}/{tablesCount}");
     }
 }

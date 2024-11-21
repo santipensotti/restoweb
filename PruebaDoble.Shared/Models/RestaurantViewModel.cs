@@ -7,6 +7,6 @@ namespace BlazorAppWithServer.Shared.Models
         public int TablesCount { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public bool ShowDetails { get; set; } = false; // Inicializada en false por defecto
+        public bool ShowDetails { get; set; } = false; 
     }
 }

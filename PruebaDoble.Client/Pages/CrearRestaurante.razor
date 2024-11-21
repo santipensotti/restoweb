@@ -40,7 +40,7 @@
         var response = await Http.PostAsJsonAsync("api/restaurant/create", restaurantRequest);
         if (response.IsSuccessStatusCode)
         {
-            Navigation.NavigateTo("/administracion"); // Volver a la administración
+            Navigation.NavigateTo("/administracion"); 
         }
         else
         {

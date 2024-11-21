@@ -5,7 +5,7 @@ namespace BlazorAppWithServer.Shared.Models
         public int RestoId { get; set; }
         public int TableId { get; set; }
         public int OrderId { get; set; }
-        public OrderState NewState { get; set; }  // Nuevo campo para el estado
+        public OrderState NewState { get; set; }
 
     }
 }

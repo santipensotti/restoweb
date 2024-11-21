@@ -93,7 +93,7 @@ else
     private int tableCount;
     private string error;
 
-    private Dictionary<int, List<Order>> tableOrders = new Dictionary<int, List<Order>>(); // Cambiado a Order
+    private Dictionary<int, List<Order>> tableOrders = new Dictionary<int, List<Order>>(); 
 
     private Timer pollingTimer;
 
@@ -152,13 +152,13 @@ else
             {
                 await LoadData();
                 await LoadOrdersByRestaurant();
-                await InvokeAsync(StateHasChanged); // Ensure UI updates are done on the main thread
+                await InvokeAsync(StateHasChanged); 
             }
             catch (Exception ex)
             {
                 error = $"Error during polling: {ex.Message}";
             }
-        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(10)); // Poll every 10 seconds
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(10)); 
     }
 
     private async Task AgregarItem()

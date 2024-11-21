@@ -78,19 +78,12 @@
                     var imageUrl = $"data:image/png;base64,{base64Image}";
                     var url = $"{baseUrl}/table/{RestaurantId}/{mesaId}";
                     
-                    Console.WriteLine($"Generated QR for Mesa {mesaId}"); // Debug
-                    Console.WriteLine($"Image URL length: {imageUrl.Length}"); // Debug
-                    
                     qrCodes.Add(new QRCodeData
                     {
                         MesaId = mesaId,
                         Url = url,
                         ImageUrl = imageUrl
                     });
-                }
-                else
-                {
-                    Console.WriteLine($"Error generating QR for Mesa {mesaId}: {response.StatusCode}"); // Debug
                 }
             }
             catch (Exception ex)
@@ -99,7 +92,7 @@
             }
         }
         
-        StateHasChanged(); // Forzar actualización de la UI
+        StateHasChanged(); 
     }
 
     private class QRCodeData

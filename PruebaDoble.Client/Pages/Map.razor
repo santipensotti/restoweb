@@ -24,22 +24,22 @@
 
     private async Task GetLocationAsync()
     {
-        // Obtiene la ubicación actual a través de JavaScript
+        
         var location = await JS.InvokeAsync<double[]>("getLocation");
         Latitude = location[0];
         Longitude = location[1];
 
-        // Agrega la ubicación actual a la lista de puntos
+        
         puntos.Add(new RestaurantMapInfo
         {
-            Id = 0, // ID ficticio para la ubicación del usuario
+            Id = 0, 
             Lat = Latitude,
             Lng = Longitude,
             Name = "Tu Ubicación",
             TablesCount = 0
         });
 
-        // Llama al API para obtener las coordenadas de los restaurantes
+        
         var coordinates = await Http.GetFromJsonAsync<List<RestaurantMapInfo>>("api/restaurant/getMaps");
         if (coordinates != null)
         {

@@ -5,7 +5,6 @@ namespace BlazorAppWithServer.Server.Data;
 public class Menu
 {
     private List<MenuItem> _repo = new List<MenuItem>(){};
-    // a dictionary may be better?
     public void addMenuItem(MenuItem elem){
 
         _repo.Add(elem);

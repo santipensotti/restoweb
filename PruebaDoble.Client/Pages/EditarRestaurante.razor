@@ -41,7 +41,7 @@
     {
         Console.WriteLine("Llegue al Obtener Restaurant");
         var response = await Http.GetFromJsonAsync<RestaurantRequest>($"api/restaurant/{Id}");
-        Console.WriteLine("Pasé el get");
+        Console.WriteLine("Pasï¿½ el get");
         restaurantRequest = response;
     }
 
@@ -52,11 +52,7 @@
         
         if (response.IsSuccessStatusCode)
         {
-            Navigation.NavigateTo("/administracion"); // Volver a administración
-        }
-        else
-        {
-            // Manejar errores
+            Navigation.NavigateTo("/administracion");
         }
     }
 
