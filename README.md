@@ -10,14 +10,10 @@ Aplicación web moderna para administrar restaurantes, mesas y pedidos, desarrol
 - Interfaz moderna y responsiva
 - Código limpio y reutilizable
 
-## 🖥️ Capturas de pantalla
-
-> (Agrega aquí imágenes de tu app si lo deseas)
 
 ## ⚙️ Requisitos
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- Navegador moderno (Chrome, Edge, Firefox, etc.)
 
 ## 🛠️ Instalación y ejecución local
 
@@ -41,9 +37,7 @@ Aplicación web moderna para administrar restaurantes, mesas y pedidos, desarrol
    cd PruebaDoble.Client
    dotnet watch run
    ```
-
-4. Abre tu navegador en [http://localhost:5000](http://localhost:5000) (o la URL que indique la consola).
-
+   
 ## 📁 Estructura del proyecto
 
 - `PruebaDoble.Client/` — Frontend Blazor WebAssembly
