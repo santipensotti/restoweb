@@ -4,9 +4,21 @@
 @using System.Text.Json.Serialization
 @using BlazorAppWithServer.Shared.Models
 
-
-<h3>Mi Mapa</h3>
-<div id="map" style="height: 500px;"></div>
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <div class="card shadow-lg p-4" style="min-width: 400px; max-width: 900px; width: 100%;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-2 text-primary">Restaurantes Cercanos</h2>
+            <h6 class="card-subtitle mb-4 text-muted text-center">
+                Visualizá tu ubicación y los restaurantes disponibles en el mapa.
+            </h6>
+            <div id="map" style="height: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>
+            <div class="mt-4 text-center">
+                <span class="badge bg-primary me-2">&nbsp;</span> Tu ubicación
+                <span class="badge bg-success ms-4 me-2">&nbsp;</span> Restaurante
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     private double Latitude { get; set; }
@@ -24,12 +36,10 @@
 
     private async Task GetLocationAsync()
     {
-        
         var location = await JS.InvokeAsync<double[]>("getLocation");
         Latitude = location[0];
         Longitude = location[1];
 
-        
         puntos.Add(new RestaurantMapInfo
         {
             Id = 0, 
@@ -39,7 +49,6 @@
             TablesCount = 0
         });
 
-        
         var coordinates = await Http.GetFromJsonAsync<List<RestaurantMapInfo>>("api/restaurant/getMaps");
         if (coordinates != null)
         {

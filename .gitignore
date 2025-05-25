@@ -1,6 +1,50 @@
 ﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+# Visual Studio, .NET, Blazor
 ################################################################################
 
-/.vs
-/PruebaDoble.Client/obj/Debug/net8.0
+# Carpetas de build y temporales
+**/bin/
+**/obj/
+**/out/
+**/Debug/
+**/Release/
+
+# Configuración de usuario y entorno
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de VSCode y Rider
+.vscode/
+.idea/
+
+# Archivos de Visual Studio
+.vs/
+
+# Archivos de logs
+*.log
+
+# Archivos de configuración local
+appsettings.Development.json
+
+# Archivos generados por Docker
+docker-compose.override.yml
+
+# Otros archivos temporales
+*.tmp
+*.temp
+
+# Archivos de dependencias de paquetes
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar archivos específicos del cliente y servidor
+/PruebaDoble.Client/obj/
+/PruebaDoble.Client/bin/
+/PruebaDoble.Server/obj/
+/PruebaDoble.Server/bin/
+/PruebaDoble.Shared/obj/
+/PruebaDoble.Shared/bin/

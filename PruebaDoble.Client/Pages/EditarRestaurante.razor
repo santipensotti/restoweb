@@ -3,57 +3,100 @@
 @inject NavigationManager Navigation
 @using BlazorAppWithServer.Shared.Models
 
-<h3>Editar Restaurante</h3>
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <div class="card shadow-lg p-4" style="min-width: 400px; max-width: 500px; width: 100%;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-3">Editar Restaurante</h2>
+            <h6 class="card-subtitle mb-4 text-muted text-center">Modifica los datos del restaurante</h6>
 
-<EditForm Model="restaurantRequest" OnValidSubmit="EditarRestaurant">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success" role="alert">@successMessage</div>
+            }
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" role="alert">@errorMessage</div>
+            }
 
-    <div class="form-group">
-        <label for="name">Nombre del Restaurante</label>
-        <InputText id="name" class="form-control" @bind-Value="restaurantRequest.Name" />
+            <EditForm Model="restaurantRequest" OnValidSubmit="EditarRestaurant">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre del Restaurante</label>
+                    <InputText id="name" class="form-control" @bind-Value="restaurantRequest.Name" placeholder="Ej: La Parrilla" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="tableCount" class="form-label">Cantidad de Mesas</label>
+                    <InputNumber id="tableCount" class="form-control" @bind-Value="restaurantRequest.TableCount" placeholder="Ej: 10" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="latitude" class="form-label">Latitud</label>
+                    <InputNumber id="latitude" class="form-control" @bind-Value="restaurantRequest.Latitude" placeholder="Ej: -34.6037" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="longitude" class="form-label">Longitud</label>
+                    <InputNumber id="longitude" class="form-control" @bind-Value="restaurantRequest.Longitude" placeholder="Ej: -58.3816" />
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100" disabled="@isSubmitting">
+                        @(isSubmitting ? "Guardando..." : "Guardar Cambios")
+                    </button>
+                    <button type="button" class="btn btn-secondary w-100" @onclick="Cancel" disabled="@isSubmitting">Cancelar</button>
+                </div>
+            </EditForm>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="tableCount">Cantidad de Mesas</label>
-        <InputNumber id="tableCount" class="form-control" @bind-Value="restaurantRequest.TableCount" />
-    </div>
-
-    <div class="form-group">
-        <label for="latitude">Latitud</label>
-        <InputNumber id="latitude" class="form-control" @bind-Value="restaurantRequest.Latitude" />
-    </div>
-
-    <div class="form-group">
-        <label for="longitude">Longitud</label>
-        <InputNumber id="longitude" class="form-control" @bind-Value="restaurantRequest.Longitude" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-</EditForm>
+</div>
 
 @code {
     [Parameter] public int Id { get; set; }
     private RestaurantRequest restaurantRequest = new RestaurantRequest();
+    private bool isSubmitting = false;
+    private string successMessage;
+    private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Llegue al Obtener Restaurant");
-        var response = await Http.GetFromJsonAsync<RestaurantRequest>($"api/restaurant/{Id}");
-        Console.WriteLine("Pas� el get");
-        restaurantRequest = response;
+        try
+        {
+            var response = await Http.GetFromJsonAsync<RestaurantRequest>($"api/restaurant/{Id}");
+            restaurantRequest = response;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar los datos: {ex.Message}";
+        }
     }
 
     private async Task EditarRestaurant()
     {
-        
-        var response = await Http.PutAsJsonAsync($"api/restaurant/update/{Id}", restaurantRequest);
-        
-        if (response.IsSuccessStatusCode)
+        isSubmitting = true;
+        successMessage = null;
+        errorMessage = null;
+        try
         {
-            Navigation.NavigateTo("/administracion");
+            var response = await Http.PutAsJsonAsync($"api/restaurant/update/{Id}", restaurantRequest);
+            if (response.IsSuccessStatusCode)
+            {
+                successMessage = "¡Cambios guardados exitosamente!";
+                await Task.Delay(1200);
+                Navigation.NavigateTo("/administracion");
+            }
+            else
+            {
+                errorMessage = $"Error: {response.StatusCode}";
+            }
         }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        isSubmitting = false;
     }
 
     private void Cancel()
